@@ -3,7 +3,7 @@ import ImageCol from './ImageCol';
 import TextCol from './TextCol';
 import '../css/styles.css';
 
-const data = require('../../DATA/data.json.js');
+const data = require('../../DATA/data.json');
 
 export default function Body() {
   const renderBody = data => {
