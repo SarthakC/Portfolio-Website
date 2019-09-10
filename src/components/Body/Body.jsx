@@ -13,6 +13,11 @@ export default class Body extends Component {
 		window.addEventListener('keydown', this.handleKeyDown);
 	}
 
+	componentDidUpdate() {
+		window.addEventListener('click', this.handleClick);
+		window.addEventListener('keydown', this.handleKeyDown);
+	}
+
 	incrementSection() {
 		let currentSection = this.state.displayedSection;
 		const totalSections = this.state.data.length - 1;
