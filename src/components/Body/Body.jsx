@@ -9,12 +9,6 @@ export default class Body extends Component {
 		displayedSection: 0,
 	};
 	componentDidMount() {
-		window.addEventListener('click', this.handleClick);
-		window.addEventListener('keydown', this.handleKeyDown);
-	}
-
-	componentDidUpdate() {
-		window.addEventListener('click', this.handleClick);
 		window.addEventListener('keydown', this.handleKeyDown);
 	}
 
@@ -45,7 +39,7 @@ export default class Body extends Component {
 	render() {
 		const sectionDisplayed = this.state.data[this.state.displayedSection];
 		return (
-			<div className='container'>
+			<div className='container' onClick={this.handleClick}>
 				<div className='row flex-fill bg-dark vh-100'>
 					<div className='col d-flex'>
 						<ImageCol ImageURL={sectionDisplayed.imageURL} />

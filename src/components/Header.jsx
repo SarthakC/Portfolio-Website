@@ -1,40 +1,21 @@
 import React, { Component } from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
 
 class Header extends Component {
-  render() {
-    return (
-      <nav className='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>
-        <a className='navbar-brand' href='#'>
-          Home
-        </a>
-        <button
-          className='navbar-toggler'
-          type='button'
-          data-toggle='collapse'
-          data-target='#navbarSupportedContent'
-          aria-controls='navbarSupportedContent'
-          aria-expanded='false'
-          aria-label='Toggle navigation'
-        >
-          <span className='navbar-toggler-icon'></span>
-        </button>
-        <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-          <ul className='navbar-nav mr-auto'>
-            <li className='nav-item'>
-              <a className='nav-link' href='#'>
-                Projects
-              </a>
-            </li>
-            <li className='nav-item'>
-              <a className='nav-link' href='#'>
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    );
-  }
+	render() {
+		return (
+			<Navbar bg='dark' expand='lg' variant='dark'>
+				<Navbar.Brand href='#home'>Home</Navbar.Brand>
+				<Navbar.Toggle aria-controls='basic-navbar-nav' />
+				<Navbar.Collapse id='basic-navbar-nav'>
+					<Nav className='mr-auto'>
+						<Nav.Link href='#home'>Projects</Nav.Link>
+						<Nav.Link href='#link'>Contact</Nav.Link>
+					</Nav>
+				</Navbar.Collapse>
+			</Navbar>
+		);
+	}
 }
 
 export default Header;
