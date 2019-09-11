@@ -40,7 +40,7 @@ export default class Body extends Component {
 		const sectionDisplayed = this.state.data[this.state.displayedSection];
 		return (
 			<div className='container' onClick={this.handleClick}>
-				<div className='row flex-fill bg-dark vh-100'>
+				<div className='row flex-fill bg-dark vh-100' key={sectionDisplayed.id}>
 					<div className='col d-flex'>
 						<ImageCol ImageURL={sectionDisplayed.imageURL} />
 					</div>
@@ -48,6 +48,7 @@ export default class Body extends Component {
 						<TextCol text={sectionDisplayed.text}></TextCol>
 					</div>
 				</div>
+				<script src='./js/nextparticle.js'></script>
 			</div>
 		);
 	}

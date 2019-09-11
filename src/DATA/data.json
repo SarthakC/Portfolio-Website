@@ -1,18 +1,22 @@
 [
-  {
-    "text": "Hello, I am Sarthak",
-    "imageURL": "https://images.unsplash.com/photo-1539605480396-a61f99da1041?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    "text": "I am a full-stack web developer.",
-    "imageURL": "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto/gigs/119165625/original/2ee01433555b179cddae5b58942aa045f7bd96e9/build-website-with-html-css-javascript-and-node-js-and-mongodb.png"
-  },
-  {
-    "text": "I live in New Delhi, India.",
-    "imageURL": "https://marketplace.canva.com/MADGwGGgJVM/5/thumbnail_large/canva-gray-india-arch-under-gray-clouds-MADGwGGgJVM.jpg"
-  },
-  {
-    "text": "And I love Metallica",
-    "imageURL": "https://www.elsetge.cat/myimg/f/39-391682_widescreen-metallica.jpg"
-  }
+	{
+		"id": 1,
+		"text": "Hello, I am Sarthak",
+		"imageURL": "https://images.unsplash.com/photo-1539605480396-a61f99da1041?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+	},
+	{
+		"id": 2,
+		"text": "I am a full-stack web developer.",
+		"imageURL": "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto/gigs/119165625/original/2ee01433555b179cddae5b58942aa045f7bd96e9/build-website-with-html-css-javascript-and-node-js-and-mongodb.png"
+	},
+	{
+		"id": 3,
+		"text": "I live in New Delhi, India.",
+		"imageURL": "https://marketplace.canva.com/MADGwGGgJVM/5/thumbnail_large/canva-gray-india-arch-under-gray-clouds-MADGwGGgJVM.jpg"
+	},
+	{
+		"id": 4,
+		"text": "And I love Metallica",
+		"imageURL": "https://www.elsetge.cat/myimg/f/39-391682_widescreen-metallica.jpg"
+	}
 ]
