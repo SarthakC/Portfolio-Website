@@ -1,7 +1,11 @@
-(function(exports) {
-  'use strict';
-
-  const _requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback){ setTimeout(callback, 10) };
+const particalize = function(exports) {
+  const _requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    function(callback) {
+      setTimeout(callback, 10);
+    };
   const PI2 = Math.PI * 2;
   let imageData, renderCount;
   let index, startIndex, layerIndex;
@@ -137,31 +141,36 @@
 
     get _mouseHandler() {
       return (e) => {
-        this.touches = [{
-          x: e.offsetX,
-          y: e.offsetY,
-          z: 49 + (this.layerCount - 1) * this.layerDistance,
-          force: 1,
-        }];
+        this.touches = [
+          {
+            x: e.offsetX,
+            y: e.offsetY,
+            z: 49 + (this.layerCount - 1) * this.layerDistance,
+            force: 1,
+          },
+        ];
       };
     }
 
     get _clickHandler() {
       return (e) => {
         const strength = this.clickStrength;
-        this.origins.map(o => o.z -= strength);
+        this.origins.map((o) => (o.z -= strength));
         setTimeout(() => {
-          this.origins.map(o => o.z += strength);
+          this.origins.map((o) => (o.z += strength));
         }, 100);
       };
     }
-
 
     get _touchHandler() {
       return (e) => {
         this.touches = [];
         rect = this.canvas.getBoundingClientRect();
-        for (touchIndex = 0; touchIndex < e.changedTouches.length; touchIndex++) {
+        for (
+          touchIndex = 0;
+          touchIndex < e.changedTouches.length;
+          touchIndex++
+        ) {
           touch = e.changedTouches[touchIndex];
           if (touch.target === this.canvas) {
             this.touches.push({
@@ -205,7 +214,8 @@
       }
       this.imageUrl = options.imageUrl || this.srcImage.src;
       this.image = document.createElement('img');
-      this.wrapperElement = options.wrapperElement || this.srcImage.parentElement;
+      this.wrapperElement =
+        options.wrapperElement || this.srcImage.parentElement;
       this.image.onload = () => this.emit('imageLoaded', options);
       this.image.crossOrigin = 'Anonymous';
       if (options.addTimestamp) {
@@ -236,7 +246,10 @@
     }
 
     _webglInitContext() {
-      this.context = this.context || this.canvas.getContext('webgl2') || this.canvas.getContext('experimental-webgl');
+      this.context =
+        this.context ||
+        this.canvas.getContext('webgl2') ||
+        this.canvas.getContext('experimental-webgl');
       this.fragmentShaderScript = `#version 300 es
 
         precision highp float;
@@ -274,16 +287,30 @@
         }
       `;
       this.context.viewport(0, 0, this.width, this.height);
-      const vertexShader = this.context.createShader(this.context.VERTEX_SHADER);
+      const vertexShader = this.context.createShader(
+        this.context.VERTEX_SHADER,
+      );
       this.context.shaderSource(vertexShader, this.vertexShaderScript);
       this.context.compileShader(vertexShader);
-      if (!this.context.getShaderParameter(vertexShader, this.context.COMPILE_STATUS)) {
+      if (
+        !this.context.getShaderParameter(
+          vertexShader,
+          this.context.COMPILE_STATUS,
+        )
+      ) {
         console.log(this.context.getShaderInfoLog(vertexShader));
       }
-      const fragmentShader = this.context.createShader(this.context.FRAGMENT_SHADER);
+      const fragmentShader = this.context.createShader(
+        this.context.FRAGMENT_SHADER,
+      );
       this.context.shaderSource(fragmentShader, this.fragmentShaderScript);
       this.context.compileShader(fragmentShader);
-      if (!this.context.getShaderParameter(fragmentShader, this.context.COMPILE_STATUS)) {
+      if (
+        !this.context.getShaderParameter(
+          fragmentShader,
+          this.context.COMPILE_STATUS,
+        )
+      ) {
         console.log(this.context.getShaderInfoLog(fragmentShader));
       }
       this.program = this.context.createProgram();
@@ -291,9 +318,15 @@
       this.context.attachShader(this.program, fragmentShader);
       this.context.linkProgram(this.program);
       this.context.useProgram(this.program);
-      this.vertexPosition = this.context.getAttribLocation(this.program, 'vertexPosition');
+      this.vertexPosition = this.context.getAttribLocation(
+        this.program,
+        'vertexPosition',
+      );
       this.context.enableVertexAttribArray(this.vertexPosition);
-      this.vertexColor = this.context.getAttribLocation(this.program, 'vertexColor');
+      this.vertexColor = this.context.getAttribLocation(
+        this.program,
+        'vertexColor',
+      );
       this.context.enableVertexAttribArray(this.vertexColor);
       this.context.clearColor(0.0, 0.0, 0.0, 0.0);
       this.context.enable(this.context.BLEND);
@@ -301,15 +334,46 @@
       this.context.blendFunc(this.context.SRC_ALPHA, this.context.ONE);
       this.vertexBuffer = this.context.createBuffer();
       this.context.bindBuffer(this.context.ARRAY_BUFFER, this.vertexBuffer);
-      this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
-      this.vertexOffset = this.context.getUniformLocation(this.program, "vertexOffset");
+      this.context.clear(
+        this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT,
+      );
+      this.vertexOffset = this.context.getUniformLocation(
+        this.program,
+        'vertexOffset',
+      );
       this.context.uniform3f(this.vertexOffset, 0, 0, 1000);
-      this.context.vertexAttribPointer(this.vertexPosition, 3.0, this.context.FLOAT, false, 28, 0);
-      this.context.vertexAttribPointer(this.vertexColor, 4.0, this.context.FLOAT, false, 28, 12);
-      this.uModelViewMatrix = this.context.getUniformLocation(this.program, 'modelViewMatrix');
-      this.uPerspectiveMatrix = this.context.getUniformLocation(this.program, 'perspectiveMatrix');
-      this.uRotationMatrix = this.context.getUniformLocation(this.program, 'rotationMatrix');
-      this.uPointSize = this.context.getUniformLocation(this.program, 'pointSize');
+      this.context.vertexAttribPointer(
+        this.vertexPosition,
+        3.0,
+        this.context.FLOAT,
+        false,
+        28,
+        0,
+      );
+      this.context.vertexAttribPointer(
+        this.vertexColor,
+        4.0,
+        this.context.FLOAT,
+        false,
+        28,
+        12,
+      );
+      this.uModelViewMatrix = this.context.getUniformLocation(
+        this.program,
+        'modelViewMatrix',
+      );
+      this.uPerspectiveMatrix = this.context.getUniformLocation(
+        this.program,
+        'perspectiveMatrix',
+      );
+      this.uRotationMatrix = this.context.getUniformLocation(
+        this.program,
+        'rotationMatrix',
+      );
+      this.uPointSize = this.context.getUniformLocation(
+        this.program,
+        'pointSize',
+      );
       this.uDepth = this.context.getUniformLocation(this.program, 'depth');
       // this.uVertexColors = this.context.getUniformLocation(this.program, 'vertexColors');
       // this.uVertexIndex = this.context.getUniformLocation(this.program, 'vertexIndex');
@@ -323,7 +387,7 @@
         var aspectRatio = this.canvas.width / this.canvas.height;
         var nearPlane = 10;
         var farPlane = 100;
-        var top = nearPlane * Math.tan(fieldOfView * Math.PI / 360.0);
+        var top = nearPlane * Math.tan((fieldOfView * Math.PI) / 360.0);
         var bottom = -top;
         var right = top * aspectRatio;
         var left = -right;
@@ -335,20 +399,35 @@
         var y = (2 * nearPlane) / (top - bottom);
 
         var perspectiveMatrix = [
-          x, 0, a, 0,
-          0, y, b, 0,
-          0, 0, c, d,
-          0, 0, -1, 0,
+          x,
+          0,
+          a,
+          0,
+          0,
+          y,
+          b,
+          0,
+          0,
+          0,
+          c,
+          d,
+          0,
+          0,
+          -1,
+          0,
         ];
-        var modelViewMatrix = [
-          1, 0, 0, 0,
-          0, 1, 0, 0,
-          0, 0, 1, 0,
-          0, 0, 0, 1,
-        ];
+        var modelViewMatrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
         this.context.viewport(0, 0, this.width, this.height);
-        this.context.uniformMatrix4fv(this.uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
-        this.context.uniformMatrix4fv(this.uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
+        this.context.uniformMatrix4fv(
+          this.uModelViewMatrix,
+          false,
+          new Float32Array(perspectiveMatrix),
+        );
+        this.context.uniformMatrix4fv(
+          this.uPerspectiveMatrix,
+          false,
+          new Float32Array(modelViewMatrix),
+        );
         this.context.uniform1f(this.uPointSize, this.particleSize);
         this.context.uniform1f(this.uDepth, this.depth);
         // this.context.uniform4fv(this.uVertexColors, new Float32Array(this.vertexColors));
@@ -362,23 +441,27 @@
       const b = Math.sin(rotationX);
       const c = Math.cos(rotationY);
       const d = Math.sin(rotationY);
-      var rotationMatrix = [
-        c, 0, d, 0,
-        0, a,-b, 0,
-       -c, b, a, 0,
-        0, 0, 0, 1,
-      ];
-      this.context.uniformMatrix4fv(this.uRotationMatrix, false, new Float32Array(rotationMatrix));
+      var rotationMatrix = [c, 0, d, 0, 0, a, -b, 0, -c, b, a, 0, 0, 0, 0, 1];
+      this.context.uniformMatrix4fv(
+        this.uRotationMatrix,
+        false,
+        new Float32Array(rotationMatrix),
+      );
     }
 
     _webglRenderer() {
       vertices = new Float32Array(this.vertices);
-      this.context.bufferData(this.context.ARRAY_BUFFER, vertices, this.context.STATIC_DRAW);
-      this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+      this.context.bufferData(
+        this.context.ARRAY_BUFFER,
+        vertices,
+        this.context.STATIC_DRAW,
+      );
+      this.context.clear(
+        this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT,
+      );
       this.context.drawArrays(this.context.POINTS, 0, this.particles.length);
       this.context.flush();
     }
-
 
     _initSettings(options) {
       this.width = options.width * 1 || this.width;
@@ -396,7 +479,8 @@
       }
       if (this.maxHeight) {
         if (/%$/.test(this.maxHeight)) {
-          this.maxHeight = (this.height * this.maxHeight.replace('%', '')) / 100;
+          this.maxHeight =
+            (this.height * this.maxHeight.replace('%', '')) / 100;
         } else {
           this.maxHeight *= 1;
         }
@@ -410,7 +494,8 @@
       }
       if (this.minHeight) {
         if (/%$/.test(this.minHeight)) {
-          this.minHeight = (this.height * this.minHeight.replace('%', '')) / 100;
+          this.minHeight =
+            (this.height * this.minHeight.replace('%', '')) / 100;
         } else {
           this.minHeight *= 1;
         }
@@ -426,8 +511,15 @@
       this.waitDuration = options.waitDuration * 1 || 200;
       this.shrinkDuration = options.shrinkDuration * 1 || 200;
       this.shrinkDistance = options.shrinkDistance * 1 || 50;
-      this.threeDimensional = options.threeDimensional !== undefined && options.threeDimensional !== 'false' ? !!options.threeDimensional : false;
-      this.lifeCycle = options.lifeCycle !== undefined && options.lifeCycle !== 'false' ? !!options.lifeCycle : false;
+      this.threeDimensional =
+        options.threeDimensional !== undefined &&
+        options.threeDimensional !== 'false'
+          ? !!options.threeDimensional
+          : false;
+      this.lifeCycle =
+        options.lifeCycle !== undefined && options.lifeCycle !== 'false'
+          ? !!options.lifeCycle
+          : false;
       this.layerDistance = options.layerDistance || this.particleGap;
       this.initPosition = options.initPosition || 'random';
       this.initDirection = options.initDirection || 'random';
@@ -466,7 +558,8 @@
         particle = this.particles[index];
         dX = origin.x - particle.x + (Math.random() - 0.5) * this.noise;
         dY = origin.y - particle.y + (Math.random() - 0.5) * this.noise;
-        dZ = origin.z - particle.z + (Math.random() - 0.5) * this.noise / 1000;
+        dZ =
+          origin.z - particle.z + ((Math.random() - 0.5) * this.noise) / 1000;
         distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
         force = distance * 0.01;
         particle.vx += force * (dX / distance) * this.speed;
@@ -489,7 +582,12 @@
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.z += particle.vz;
-        if (0 > particle.x || particle.x >= this.width || 0 > particle.y || particle.y >= this.height) {
+        if (
+          0 > particle.x ||
+          particle.x >= this.width ||
+          0 > particle.y ||
+          particle.y >= this.height
+        ) {
           particle.isHidden = true;
           if (this.state === 'stopping') {
             particle.isDead = true;
@@ -550,7 +648,10 @@
     }
 
     _defaultRenderer() {
-      this.depth = Math.max(this.layerDistance * this.layerCount / 2, this.mouseForce);
+      this.depth = Math.max(
+        (this.layerDistance * this.layerCount) / 2,
+        this.mouseForce,
+      );
       this.minZ = -this.depth;
       this.maxZ = this.depth;
       imageData = this.context.createImageData(this.width, this.height);
@@ -563,8 +664,11 @@
           y = ~~particle.y;
           a = origin.color[3];
           if (this.alphaFade > 0 && this.layerCount > 1) {
-            z = Math.max(Math.min(particle.z, this.maxZ), this.minZ) - this.minZ;
-            a = a * (1 - this.alphaFade) + (a * this.alphaFade * (z / (this.maxZ - this.minZ)));
+            z =
+              Math.max(Math.min(particle.z, this.maxZ), this.minZ) - this.minZ;
+            a =
+              a * (1 - this.alphaFade) +
+              a * this.alphaFade * (z / (this.maxZ - this.minZ));
             a = Math.max(Math.min(~~a, 255), 0);
           }
           startIndex = (x + y * this.width) * 4;
@@ -618,8 +722,10 @@
           break;
         }
         case 'misplaced': {
-          particle.x = origin.x + Math.random() * this.width * 0.3 - this.width * 0.1;
-          particle.y = origin.y + Math.random() * this.height * 0.3 - this.height * 0.1;
+          particle.x =
+            origin.x + Math.random() * this.width * 0.3 - this.width * 0.1;
+          particle.y =
+            origin.y + Math.random() * this.height * 0.3 - this.height * 0.1;
           break;
         }
         default: {
@@ -785,27 +891,29 @@
         this.renderWidth = ~~Math.min(
           this.width || Number.POSITIVE_INFINITY,
           this.minWidth || this.imageWidth || Number.POSITIVE_INFINITY,
-          this.maxWidth || Number.POSITIVE_INFINITY
+          this.maxWidth || Number.POSITIVE_INFINITY,
         );
         this.renderHeight = ~~(this.renderWidth / this.imageRatio);
       } else {
         this.renderHeight = ~~Math.min(
           this.height || Number.POSITIVE_INFINITY,
           this.minHeight || this.imageHeight || Number.POSITIVE_INFINITY,
-          this.maxHeight || Number.POSITIVE_INFINITY
+          this.maxHeight || Number.POSITIVE_INFINITY,
         );
         this.renderWidth = ~~(this.renderHeight * this.imageRatio);
       }
-      this.offsetX = ~~((this.width - this.renderWidth) / 2)
-      this.offsetY = ~~((this.height - this.renderHeight) / 2)
+      this.offsetX = ~~((this.width - this.renderWidth) / 2);
+      this.offsetY = ~~((this.height - this.renderHeight) / 2);
       canvas.width = this.renderWidth;
       canvas.height = this.renderHeight;
       context = canvas.getContext('2d');
       context.drawImage(this.image, 0, 0, this.renderWidth, this.renderHeight);
-      data = context.getImageData(0, 0, this.renderWidth, this.renderHeight).data;
+      data = context.getImageData(0, 0, this.renderWidth, this.renderHeight)
+        .data;
       this.origins = undefined;
       this.origins = [];
-      const duration = this.growDuration + this.waitDuration + this.shrinkDuration;
+      const duration =
+        this.growDuration + this.waitDuration + this.shrinkDuration;
       for (x = 0; x < this.renderWidth; x += this.particleGap) {
         for (y = 0; y < this.renderHeight; y += this.particleGap) {
           index = (x + y * this.renderWidth) * 4;
@@ -822,7 +930,7 @@
                   color: this.colorArr,
                   tick,
                   seed,
-                  vertexColors: this.colorArr.map(c => c / 255),
+                  vertexColors: this.colorArr.map((c) => c / 255),
                 });
               }
             } else {
@@ -849,30 +957,49 @@
     }
 
     _parseColor(strParam) {
-    	let color;
-      if (typeof(strParam) !== 'string') {
+      let color;
+      if (typeof strParam !== 'string') {
         return undefined;
       }
-    	const str = strParam.replace(' ', '');
+      const str = strParam.replace(' ', '');
 
-    	if (color = /^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/.exec(str)) {
-    		color = [parseInt(color[1], 16), parseInt(color[2], 16), parseInt(color[3], 16)];
-    	} else if (color = /^#([\da-fA-F])([\da-fA-F])([\da-fA-F])/.exec(str)) {
-    		color = [parseInt(color[1], 16) * 17, parseInt(color[2], 16) * 17, parseInt(color[3], 16) * 17];
-    	} else if (color = /^rgba\(([\d]+),([\d]+),([\d]+),([\d]+|[\d]*.[\d]+)\)/.exec(str)) {
-    		color = [+color[1], +color[2], +color[3], +color[4]];
-    	} else if (color = /^rgb\(([\d]+),([\d]+),([\d]+)\)/.exec(str)) {
-    		color = [+color[1], +color[2], +color[3]];
-    	} else return undefined;
+      if (
+        (color = /^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/.exec(str))
+      ) {
+        color = [
+          parseInt(color[1], 16),
+          parseInt(color[2], 16),
+          parseInt(color[3], 16),
+        ];
+      } else if ((color = /^#([\da-fA-F])([\da-fA-F])([\da-fA-F])/.exec(str))) {
+        color = [
+          parseInt(color[1], 16) * 17,
+          parseInt(color[2], 16) * 17,
+          parseInt(color[3], 16) * 17,
+        ];
+      } else if (
+        (color = /^rgba\(([\d]+),([\d]+),([\d]+),([\d]+|[\d]*.[\d]+)\)/.exec(
+          str,
+        ))
+      ) {
+        color = [+color[1], +color[2], +color[3], +color[4]];
+      } else if ((color = /^rgb\(([\d]+),([\d]+),([\d]+)\)/.exec(str))) {
+        color = [+color[1], +color[2], +color[3]];
+      } else return undefined;
 
-    	return color;
+      return color;
     }
-  }
+  };
 
   exports.NextParticle = NextParticle;
   const nextParticles = document.getElementsByClassName('next-particle');
-  for (let nextParticleIndex = 0; nextParticleIndex < nextParticles.length; nextParticleIndex++) {
+  for (
+    let nextParticleIndex = 0;
+    nextParticleIndex < nextParticles.length;
+    nextParticleIndex++
+  ) {
     const elem = nextParticles[nextParticleIndex];
     elem.nextParticle = new NextParticle(elem);
   }
-}(window));
+};
+ export default particalize;
