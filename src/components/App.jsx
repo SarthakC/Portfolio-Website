@@ -4,14 +4,14 @@ import Body from './Body/Body';
 import './css/styles.css';
 
 class App extends Component {
-	render() {
-		return (
-			<div>
-				<Header />
-				<Body />
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        <Header />
+        <Body />
+      </div>
+    );
+  }
 }
 
 export default App;
